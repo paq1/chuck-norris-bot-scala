@@ -9,7 +9,7 @@ import scala.concurrent.ExecutionContext
 
 class ChuckNorrisCommandListener(
     jokeChuckNorrisService: JokeChuckNorrisService
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends ListenerAdapter
     with LazyLogging {
 

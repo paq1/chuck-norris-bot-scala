@@ -7,19 +7,21 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import com.typesafe.config.{Config, ConfigFactory}
 
 object Launcher {
+
+  private val config: Config = ConfigFactory.load()
+  private val token: String = config.getString("bot.token")
 
   private val chuckNorrisJokeService: JokeChuckNorrisService =
     new JokeChuckNorrisServiceImpl
 
   def main(args: Array[String]): Unit = {
     val jda = JDABuilder
-      .createDefault(
-        "xxx"
-      )
+      .createDefault(token)
       .addEventListeners(new ChuckNorrisCommandListener(chuckNorrisJokeService))
-      .setActivity(Activity.playing("Type /ping"))
+      .setActivity(Activity.playing("Type /joke or /ping"))
       .build
 
     jda

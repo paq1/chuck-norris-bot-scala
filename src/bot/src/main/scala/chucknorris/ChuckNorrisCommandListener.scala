@@ -6,19 +6,28 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 class ChuckNorrisCommandListener extends ListenerAdapter {
 
-  override def onSlashCommandInteraction(event: SlashCommandInteractionEvent): Unit = {
+  override def onSlashCommandInteraction(
+      event: SlashCommandInteractionEvent
+  ): Unit = {
     // make sure we handle the right command
     event.getName match {
       case "ping" =>
         val time = System.currentTimeMillis
         logger.info(s"command ${event.getName} used by ${event.getName}")
-        event.reply("Pong! ").setEphemeral(false)
+        event
+          .reply("Pong! ")
+          .setEphemeral(false)
           .flatMap(v =>
-            event.getHook.editOriginalFormat(s"Pong: ${System.currentTimeMillis() - time} ms") // then edit original
-          ).queue();
+            event.getHook.editOriginalFormat(
+              s"Pong: ${System.currentTimeMillis() - time} ms"
+            ) // then edit original
+          )
+          .queue()
 
       case _ =>
-        logger.info(s"Unknown command ${event.getName} used by ${event.getName}")
+        logger.info(
+          s"Unknown command ${event.getName} used by ${event.getName}"
+        )
     }
   }
 

@@ -1,6 +1,6 @@
 package chucknorris
 
-import chucknorris.services.{JokeChuckNorrisService, JokeChuckNorrisServiceImpl}
+import chucknorris.services.JokeChuckNorrisService
 import com.typesafe.scalalogging.Logger
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter

@@ -1,7 +1,7 @@
 package chucknorris
 
 import chucknorris.services.JokeChuckNorrisService
-import com.typesafe.scalalogging.Logger
+import com.typesafe.scalalogging.{LazyLogging, Logger}
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
@@ -10,7 +10,8 @@ import scala.concurrent.ExecutionContext
 class ChuckNorrisCommandListener(
     jokeChuckNorrisService: JokeChuckNorrisService
 )(implicit ec: ExecutionContext)
-    extends ListenerAdapter {
+    extends ListenerAdapter
+    with LazyLogging {
 
   override def onSlashCommandInteraction(
       event: SlashCommandInteractionEvent
@@ -48,6 +49,4 @@ class ChuckNorrisCommandListener(
         )
     }
   }
-
-  private val logger = Logger(getClass.getName)
 }

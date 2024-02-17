@@ -5,8 +5,8 @@ import sttp.client4.quick.*
 
 import scala.concurrent.Future
 
-class JokeChuckNorrisServiceImpl {
-  def getRandomJoke(): Future[String] = {
+class JokeChuckNorrisServiceImpl extends JokeChuckNorrisService {
+  def getRandomJoke: Future[String] = {
 
     val result: Response[String] = quickRequest
       .get(uri"https://chuckn.neant.be/api/rand")

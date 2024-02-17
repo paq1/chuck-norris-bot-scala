@@ -1,7 +1,7 @@
 package app
 
 import chucknorris.ChuckNorrisCommandListener
-import chucknorris.services.JokeChuckNorrisServiceImpl
+import chucknorris.services.{JokeChuckNorrisService, JokeChuckNorrisServiceImpl}
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -10,7 +10,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object Launcher {
 
-  val chuckNorrisJokeService = new JokeChuckNorrisServiceImpl
+  private val chuckNorrisJokeService: JokeChuckNorrisService =
+    new JokeChuckNorrisServiceImpl
 
   def main(args: Array[String]): Unit = {
     val jda = JDABuilder

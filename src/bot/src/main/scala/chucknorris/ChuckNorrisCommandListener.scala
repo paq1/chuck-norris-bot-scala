@@ -1,6 +1,6 @@
 package chucknorris
 
-import chucknorris.services.JokeChuckNorrisServiceImpl
+import chucknorris.services.{JokeChuckNorrisService, JokeChuckNorrisServiceImpl}
 import com.typesafe.scalalogging.Logger
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import scala.concurrent.ExecutionContext
 
 class ChuckNorrisCommandListener(
-    jokeChuckNorrisServiceImpl: JokeChuckNorrisServiceImpl
+    jokeChuckNorrisService: JokeChuckNorrisService
 )(implicit ec: ExecutionContext)
     extends ListenerAdapter {
 
@@ -19,26 +19,20 @@ class ChuckNorrisCommandListener(
     event.getName match {
 
       case "ping" =>
-        jokeChuckNorrisServiceImpl
-          .getRandomJoke()
-          .map { joke =>
-            val time = System.currentTimeMillis
-            logger.info(s"command ${event.getName} used by ${event.getName}")
-            logger.info(s"joke : $joke")
-            event
-              .reply("Pong! ")
-              .setEphemeral(false)
-              .flatMap(v =>
-                event.getHook.editOriginalFormat(
-                  s"Pong: ${System.currentTimeMillis() - time} ms"
-                ) // then edit original
-              )
-              .queue()
-          }
+        val time = System.currentTimeMillis
+        logger.info(s"command ${event.getName} used by ${event.getName}")
+        event
+          .reply("Pong! ")
+          .setEphemeral(false)
+          .flatMap(v =>
+            event.getHook.editOriginalFormat(
+              s"Pong: ${System.currentTimeMillis() - time} ms"
+            ) // then edit original
+          )
+          .queue()
 
       case "joke" =>
-        jokeChuckNorrisServiceImpl
-          .getRandomJoke()
+        jokeChuckNorrisService.getRandomJoke
           .map { joke =>
             logger.info(s"command ${event.getName} used by ${event.getName}")
             logger.info(s"joke : $joke")

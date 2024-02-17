@@ -6,6 +6,7 @@ lazy val root = (project in file("."))
   .aggregate(bot, core)
 
 lazy val bot = (project in file("src/bot"))
+  .dependsOn(core)
   .settings(
     name := "ChuckNorrisBot-bot",
     libraryDependencies ++= List(

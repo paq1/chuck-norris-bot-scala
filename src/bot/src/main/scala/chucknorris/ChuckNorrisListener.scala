@@ -1,3 +1,5 @@
+package chucknorris
+
 import com.typesafe.scalalogging.Logger
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.session.ReadyEvent
@@ -14,6 +16,7 @@ class ChuckNorrisListener extends EventListener {
     event match
       case event: ReadyEvent =>
         logger.info("Bot is ready")
+      case _ => logger.info("any event catch")
   }
 }
 

@@ -1,26 +1,35 @@
 package app
 
 import chucknorris.ChuckNorrisCommandListener
+import chucknorris.services.JokeChuckNorrisServiceImpl
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object Launcher {
+
+  val chuckNorrisJokeService = new JokeChuckNorrisServiceImpl
 
   def main(args: Array[String]): Unit = {
     val jda = JDABuilder
-      .createDefault("xxx")
-//      .addEventListeners(new ChuckNorrisListener)
-      .addEventListeners(new ChuckNorrisCommandListener)
+      .createDefault(
+        "xxx"
+      )
+      .addEventListeners(new ChuckNorrisCommandListener(chuckNorrisJokeService))
       .setActivity(Activity.playing("Type /ping"))
       .build
 
     jda
       .updateCommands()
       .addCommands(
-        Commands.slash("ping", "Calculate ping of the bot")
+        List(
+          Commands.slash("ping", "Pong"),
+          Commands.slash("joke", "Get Chuck Norris joke")
+        ) *
       )
-      .queue()
+      .submit()
   }
 
 }

@@ -1,16 +1,18 @@
 package chucknorris.services
 
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import sttp.client4.Response
 import sttp.client4.quick.*
 
 import scala.concurrent.Future
 
-class JokeChuckNorrisServiceImpl
+class JokeChuckNorrisServiceImpl(config: Config)
     extends JokeChuckNorrisService
     with LazyLogging {
+
+  private val url = config.getString("chuckNorrisApi.url")
   def getRandomJoke: Future[String] = {
-    val url = "https://chuckn.neant.be/api/rand"
     val result: Response[String] = quickRequest
       .get(uri"$url")
       .send()

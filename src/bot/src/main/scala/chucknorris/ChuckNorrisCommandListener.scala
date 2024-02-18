@@ -24,11 +24,14 @@ class ChuckNorrisCommandListener(
 
     val time = System.currentTimeMillis
     val now = Instant.now()
-    implicit val context: Context = Context(event.getName, now)
+
+    implicit val context: Context =
+      Context(event.getUser.getName, event.getChannel.getName, now)
 
     commandHandlers
       .foreach { commandHandler =>
         if (commandHandler.commandName == event.getName) {
+          logger.debug(s"command context : $context")
           commandHandler
             .onCommand(event.getName)
             .map {

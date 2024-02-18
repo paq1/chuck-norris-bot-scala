@@ -14,7 +14,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ChuckNorrisCommandListener(
     jokeChuckNorrisService: JokeChuckNorrisService,
     commandHandlers: List[CommandHandler[Future, String]]
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends ListenerAdapter
     with LazyLogging {
 
@@ -25,7 +25,7 @@ class ChuckNorrisCommandListener(
     val time = System.currentTimeMillis
     val now = Instant.now()
 
-    implicit val context: Context =
+    given context: Context =
       Context(event.getUser.getName, event.getChannel.getName, now)
 
     commandHandlers

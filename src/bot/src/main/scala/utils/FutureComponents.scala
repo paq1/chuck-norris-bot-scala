@@ -3,6 +3,6 @@ package utils
 import scala.concurrent.ExecutionContext
 
 trait FutureComponents {
-  implicit def executionContext: ExecutionContext =
+  given executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.global
 }

@@ -9,7 +9,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class JokeCommandHandler(
     jokeService: JokeChuckNorrisService
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends CommandHandlerSimpleReply[Future, String]
     with LazyLogging {
 
@@ -18,7 +18,7 @@ class JokeCommandHandler(
 
   override def onCommand(
       cmd: String
-  )(implicit ctx: Context): Future[Response] = {
+  )(using ctx: Context): Future[Response] = {
     jokeService.getRandomJoke
       .map { joke =>
         logger.info(s"joke : $joke")

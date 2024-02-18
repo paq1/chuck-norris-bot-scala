@@ -9,7 +9,7 @@ trait CommandHandler[F[_], COMMAND] {
 
   def description: String
 
-  def onCommand(cmd: COMMAND)(implicit ctx: Context): F[Response]
+  def onCommand(cmd: COMMAND)(using ctx: Context): F[Response]
 
 }
 

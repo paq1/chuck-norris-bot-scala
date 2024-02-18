@@ -6,7 +6,7 @@ import shared.Context
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PingCommandHandler(implicit ec: ExecutionContext)
+class PingCommandHandler(using ec: ExecutionContext)
     extends CommandHandlerSimpleReply[Future, String]
     with LazyLogging {
 
@@ -15,8 +15,8 @@ class PingCommandHandler(implicit ec: ExecutionContext)
 
   override def onCommand(
       cmd: String
-  )(implicit ctx: Context): Future[Response] = {
+  )(using ctx: Context): Future[Response] = {
     Future.successful(MessageResponse("reply Pong"))
   }
-
+  
 }

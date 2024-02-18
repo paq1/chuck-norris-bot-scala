@@ -1,15 +1,20 @@
 package chucknorris
 
+import chucknorris.commandHandler.CommandHandler
+import chucknorris.commandHandler.responses.MessageResponse
 import chucknorris.services.JokeChuckNorrisService
 import com.typesafe.scalalogging.{LazyLogging, Logger}
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import shared.Context
 
-import scala.concurrent.ExecutionContext
+import java.time.Instant
+import scala.concurrent.{ExecutionContext, Future}
 
 class ChuckNorrisCommandListener(
-    jokeChuckNorrisService: JokeChuckNorrisService
-)(using ec: ExecutionContext)
+    jokeChuckNorrisService: JokeChuckNorrisService,
+    commandHandlers: List[CommandHandler[Future, String]]
+)(implicit ec: ExecutionContext)
     extends ListenerAdapter
     with LazyLogging {
 
@@ -17,36 +22,26 @@ class ChuckNorrisCommandListener(
       event: SlashCommandInteractionEvent
   ): Unit = {
 
-    event.getName match {
+    val time = System.currentTimeMillis
+    val now = Instant.now()
+    implicit val context: Context = Context(event.getName, now)
 
-      case "ping" =>
-        val time = System.currentTimeMillis
-        logger.info(s"command ${event.getName} used by ${event.getName}")
-        event
-          .reply("Pong! ")
-          .setEphemeral(false)
-          .flatMap(v =>
-            event.getHook.editOriginalFormat(
-              s"Pong: ${System.currentTimeMillis() - time} ms"
-            ) // then edit original
-          )
-          .queue()
+    commandHandlers
+      .foreach { commandHandler =>
+        if (commandHandler.commandName == event.getName) {
+          commandHandler
+            .onCommand(event.getName)
+            .map {
+              case MessageResponse(content) =>
+                event
+                  .reply(content)
+                  .setEphemeral(false)
+                  .queue()
+              case _ =>
+                logger.error("type de reponse non catchée")
+            }
 
-      case "joke" =>
-        jokeChuckNorrisService.getRandomJoke
-          .map { joke =>
-            logger.info(s"command ${event.getName} used by ${event.getName}")
-            logger.info(s"joke : $joke")
-            event
-              .reply(joke)
-              .setEphemeral(false)
-              .queue()
-          }
-
-      case _ =>
-        logger.info(
-          s"Unknown command ${event.getName} used by ${event.getName}"
-        )
-    }
+        }
+      }
   }
 }
